@@ -404,8 +404,13 @@ export const exportSalesReport = async (data) => {
   // ===============================
   // Auto Width
   // ===============================
-  worksheet.columns.forEach((col) => {
-    col.width = 15;
+  worksheet.columns.map((col, index) => {
+    console.log("index = ", index);
+    if (index === 0) {
+      col.width = 8;
+    } else {
+      col.width = 15;
+    }
   });
 
   // ===============================
