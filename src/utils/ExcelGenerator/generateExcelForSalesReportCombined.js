@@ -187,6 +187,7 @@ export const exportSalesReport = async (data) => {
   worksheet.mergeCells("A1:Z1");
   worksheet.getCell("A1").value = "Care-Box";
   worksheet.getCell("A1").alignment = { horizontal: "center" };
+  worksheet.getRow(worksheet.lastRow.number).font = { bold: true };
 
   worksheet.mergeCells("A2:Z2");
   worksheet.getCell("A2").value =
@@ -395,12 +396,124 @@ export const exportSalesReport = async (data) => {
     worksheet.addRow(row);
   });
 
-  const totalRowIndex = worksheet.lastRow.number + 1;
+  let lastIndex = worksheet.lastRow.number + 1;
 
-  worksheet.mergeCells(`A${totalRowIndex}:B${totalRowIndex}`);
-  worksheet.getCell(`A${totalRowIndex}`).value = "Grand Total";
+  worksheet.mergeCells(`A${lastIndex}:B${lastIndex}`);
+  worksheet.getCell(`A${lastIndex}`).value = "Grand Total";
+  worksheet.getCell(`C${lastIndex}`).value = "";
+  worksheet.getCell(`D${lastIndex}`).value = isValidNumber(
+    dailyCombineSales?.data?.sub_total?.sub_total_mrp,
+  )
+    ? dailyCombineSales.data.sub_total.sub_total_mrp
+    : "";
+  worksheet.getCell(`E${lastIndex}`).value = isValidNumber(
+    dailyCombineSales?.data?.sub_total?.total_shipping_charge,
+  )
+    ? dailyCombineSales?.data?.sub_total?.total_shipping_charge
+    : "";
 
-  worksheet.getRow(totalRowIndex).font = { bold: true };
+  worksheet.getCell(`F${lastIndex}`).value = isValidNumber(
+    dailyCombineSales?.data?.sub_total?.total_discount,
+  )
+    ? dailyCombineSales.data.sub_total.total_discount
+    : "";
+
+  worksheet.getCell(`G${lastIndex}`).value = isValidNumber(
+    dailyCombineSales?.data?.sub_total?.total_vat,
+  )
+    ? dailyCombineSales.data.sub_total.total_vat
+    : "";
+  worksheet.getCell(`H${lastIndex}`).value = isValidNumber(
+    dailyCombineSales?.data?.sub_total?.total_exchange,
+  )
+    ? dailyCombineSales.data.sub_total.total_exchange
+    : "";
+
+  worksheet.getCell(`I${lastIndex}`).value = isValidNumber(
+    dailyCombineSales?.data?.sub_total?.sub_total_cost,
+  )
+    ? dailyCombineSales.data.sub_total.sub_total_cost
+    : "";
+
+  worksheet.getCell(`J${lastIndex}`).value = isValidNumber(
+    dailyCombineSales?.data?.sub_total?.total_exchange_cost,
+  )
+    ? dailyCombineSales?.data?.sub_total?.total_exchange_cost
+    : "";
+
+  worksheet.getCell(`K${lastIndex}`).value = isValidNumber(
+    dailyCombineSales?.data?.sub_total?.total_net_amount,
+  )
+    ? dailyCombineSales.data.sub_total.total_net_amount
+    : "";
+
+  worksheet.getCell(`L${lastIndex}`).value = isValidNumber(
+    dailyCombineSales?.data?.sub_total?.total_due,
+  )
+    ? dailyCombineSales.data.sub_total.total_due
+    : "";
+
+  worksheet.getCell(`M${lastIndex}`).value = isValidNumber(
+    dailyCombineSales?.data?.sub_total?.total_exchange_cost,
+  )
+    ? dailyCombineSales.data.sub_total.total_exchange_cost
+    : "";
+
+  worksheet.getCell(`N${lastIndex}`).value = isValidNumber(
+    dailyCombineSales?.data?.sub_total?.total_cash,
+  )
+    ? dailyCombineSales.data.sub_total.total_cash
+    : "";
+
+  worksheet.getCell(`O${lastIndex}`).value = isValidNumber(
+    dailyCombineSales?.data?.sub_total?.total_card,
+  )
+    ? dailyCombineSales.data.sub_total.total_card
+    : "";
+  worksheet.getCell(`P${lastIndex}`).value = isValidNumber(
+    dailyCombineSales?.data?.sub_total?.total_bkash_paid,
+  )
+    ? dailyCombineSales.data.sub_total.total_bkash_paid
+    : "";
+  worksheet.getCell(`Q${lastIndex}`).value = isValidNumber(
+    dailyCombineSales?.data?.sub_total?.total_nagad_paid,
+  )
+    ? dailyCombineSales.data.sub_total.total_nagad_paid
+    : "";
+  worksheet.getCell(`R${lastIndex}`).value = isValidNumber(
+    dailyCombineSales?.data?.sub_total?.total_rocket_paid,
+  )
+    ? dailyCombineSales.data.sub_total.total_rocket_paid
+    : "";
+  worksheet.getCell(`S${lastIndex}`).value = isValidNumber(
+    dailyCombineSales?.data?.sub_total?.total_upay_paid,
+  )
+    ? dailyCombineSales.data.sub_total.total_upay_paid
+    : "";
+  worksheet.getCell(`T${lastIndex}`).value = isValidNumber(
+    dailyCombineSales?.data?.sub_total?.total_city_paid,
+  )
+    ? dailyCombineSales.data.sub_total.total_city_paid
+    : "";
+  worksheet.getCell(`U${lastIndex}`).value = isValidNumber(
+    dailyCombineSales?.data?.sub_total?.total_nexus_paid,
+  )
+    ? dailyCombineSales.data.sub_total.total_nexus_paid
+    : "";
+  worksheet.getCell(`V${lastIndex}`).value = isValidNumber(
+    dailyCombineSales?.data?.sub_total?.total_less,
+  )
+    ? dailyCombineSales.data.sub_total.total_less
+    : "";
+  worksheet.getCell(`W${lastIndex}`).value = isValidNumber(
+    dailyCombineSales?.data?.sub_total?.total_profit,
+  )
+    ? dailyCombineSales.data.sub_total.total_profit
+    : "";
+  worksheet.getCell(`X${lastIndex}`).value =
+    dailyCombineSales.data.sub_total.total_gp;
+
+  worksheet.getRow(lastIndex).font = { bold: true };
 
   // ===============================
   // Auto Width
@@ -417,7 +530,7 @@ export const exportSalesReport = async (data) => {
   });
 
   //2ed Table
-  let lastIndex = worksheet.lastRow.number + 3;
+  lastIndex = worksheet.lastRow.number + 3;
 
   worksheet.mergeCells(`A${lastIndex}:D${lastIndex}`);
   worksheet.getCell(`A${lastIndex}`).value = "Source Wise Sales Report";
