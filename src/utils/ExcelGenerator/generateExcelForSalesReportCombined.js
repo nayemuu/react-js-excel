@@ -2,6 +2,7 @@ import ExcelJS from "exceljs";
 import { saveAs } from "file-saver";
 import { isValidNumber } from "../dataTypeCheck";
 import { convertDate, convertTime } from "../ConvertDateTime";
+import { roundTo } from "../utils";
 
 const fromDateInLastQuery = "22-04-2026";
 const toDateInLastQuery = "26-04-2026";
@@ -405,7 +406,7 @@ export const exportSalesReport = async (data) => {
   // Auto Width
   // ===============================
   worksheet.columns.map((col, index) => {
-    console.log("index = ", index);
+    // console.log("index = ", index);
     // if (index === 0) {
     //   col.width = 7;
     // } else {
@@ -416,7 +417,7 @@ export const exportSalesReport = async (data) => {
   });
 
   //2ed Table
-  const sourceTitleRowIndex = worksheet.lastRow.number + 3;
+  let sourceTitleRowIndex = worksheet.lastRow.number + 3;
 
   worksheet.mergeCells(`A${sourceTitleRowIndex}:D${sourceTitleRowIndex}`);
   worksheet.getCell(`A${sourceTitleRowIndex}`).value =
@@ -484,6 +485,111 @@ export const exportSalesReport = async (data) => {
       : "",
   ]);
 
+  worksheet.getRow(worksheet.lastRow.number).font = { bold: true };
+
+  //3ed Table
+
+  sourceTitleRowIndex = worksheet.lastRow.number + 3;
+  worksheet.getCell(`A${sourceTitleRowIndex}`).value = "Cash Amount";
+  worksheet.getCell(`B${sourceTitleRowIndex}`).value = isValidNumber(
+    dailyCombineSales?.data?.sub_total?.total_cash,
+  )
+    ? dailyCombineSales.data.sub_total.total_cash
+    : "";
+  worksheet.getRow(worksheet.lastRow.number).font = { bold: true };
+
+  worksheet.addRow([
+    "Card Amount",
+    isValidNumber(dailyCombineSales?.data?.sub_total?.total_card)
+      ? dailyCombineSales.data.sub_total.total_card
+      : "",
+  ]);
+  worksheet.getRow(worksheet.lastRow.number).font = { bold: true };
+
+  worksheet.addRow([
+    "Bkash",
+    isValidNumber(dailyCombineSales?.data?.sub_total?.total_bkash_paid)
+      ? dailyCombineSales.data.sub_total.total_bkash_paid
+      : "",
+  ]);
+  worksheet.getRow(worksheet.lastRow.number).font = { bold: true };
+
+  worksheet.addRow([
+    "Nagad",
+    isValidNumber(dailyCombineSales?.data?.sub_total?.total_nagad_paid)
+      ? dailyCombineSales.data.sub_total.total_nagad_paid
+      : "",
+  ]);
+  worksheet.getRow(worksheet.lastRow.number).font = { bold: true };
+
+  worksheet.addRow([
+    "Rocket",
+    isValidNumber(dailyCombineSales?.data?.sub_total?.total_rocket_paid)
+      ? dailyCombineSales.data.sub_total.total_rocket_paid
+      : "",
+  ]);
+  worksheet.getRow(worksheet.lastRow.number).font = { bold: true };
+
+  worksheet.addRow([
+    "Upay",
+    isValidNumber(dailyCombineSales?.data?.sub_total?.total_upay_paid)
+      ? dailyCombineSales.data.sub_total.total_upay_paid
+      : "",
+  ]);
+  worksheet.getRow(worksheet.lastRow.number).font = { bold: true };
+
+  worksheet.addRow([
+    "City Pay",
+    isValidNumber(dailyCombineSales?.data?.sub_total?.total_city_paid)
+      ? dailyCombineSales.data.sub_total.total_city_paid
+      : "",
+  ]);
+  worksheet.getRow(worksheet.lastRow.number).font = { bold: true };
+
+  worksheet.addRow([
+    "Nexus Pay",
+    isValidNumber(dailyCombineSales?.data?.sub_total?.total_nexus_paid)
+      ? dailyCombineSales.data.sub_total.total_nexus_paid
+      : "",
+  ]);
+  worksheet.getRow(worksheet.lastRow.number).font = { bold: true };
+
+  worksheet.addRow([
+    "Net Amount",
+    dailyCombineSales?.data?.sub_total?.total_net_amount,
+  ]);
+  worksheet.getRow(worksheet.lastRow.number).font = { bold: true };
+
+  worksheet.addRow([
+    "Due Amount",
+    -dailyCombineSales?.data?.sub_total?.total_due,
+  ]);
+  worksheet.getRow(worksheet.lastRow.number).font = { bold: true };
+
+  worksheet.addRow([
+    "Return Amount",
+    -dailyCombineSales?.data?.sub_total?.total_exchange_cost,
+  ]);
+  worksheet.getRow(worksheet.lastRow.number).font = { bold: true };
+
+  worksheet.addRow([
+    "Grand Total",
+    dailyCombineSales?.data
+      ? roundTo(
+          parseFloat(dailyCombineSales?.data?.sub_total?.total_net_amount) -
+            ((parseFloat(dailyCombineSales?.data?.sub_total?.total_due)
+              ? parseFloat(dailyCombineSales?.data?.sub_total?.total_due)
+              : 0) +
+              (parseFloat(
+                dailyCombineSales?.data?.sub_total?.total_exchange_cost,
+              )
+                ? parseFloat(
+                    dailyCombineSales?.data?.sub_total?.total_exchange_cost,
+                  )
+                : 0)),
+        )
+      : "",
+  ]);
   worksheet.getRow(worksheet.lastRow.number).font = { bold: true };
 
   // ===============================
