@@ -710,3 +710,6 @@ export const exportSalesReport = async (data) => {
   const buffer = await workbook.xlsx.writeBuffer();
   saveAs(new Blob([buffer]), "Sales-Report.xlsx");
 };
+
+// Install
+// npm install exceljs file-saver
