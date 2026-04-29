@@ -184,7 +184,7 @@ export const exportSalesReport = async (data) => {
   // Header Section
   // ===============================
   worksheet.mergeCells("A1:Z1");
-  worksheet.getCell("A1").value = "Care-Box"; // hey chatgpt, make this text bold
+  worksheet.getCell("A1").value = "Care-Box";
   worksheet.getCell("A1").alignment = { horizontal: "center" };
 
   worksheet.mergeCells("A2:Z2");
@@ -406,12 +406,85 @@ export const exportSalesReport = async (data) => {
   // ===============================
   worksheet.columns.map((col, index) => {
     console.log("index = ", index);
-    if (index === 0) {
-      col.width = 8;
-    } else {
-      col.width = 15;
-    }
+    // if (index === 0) {
+    //   col.width = 7;
+    // } else {
+    //   col.width = 16;
+    // }
+
+    col.width = 16;
   });
+
+  //2ed Table
+  const sourceTitleRowIndex = worksheet.lastRow.number + 3;
+
+  worksheet.mergeCells(`A${sourceTitleRowIndex}:D${sourceTitleRowIndex}`);
+  worksheet.getCell(`A${sourceTitleRowIndex}`).value =
+    "Source Wise Sales Report";
+  worksheet.getCell(`A${sourceTitleRowIndex}`).font = { bold: true };
+  worksheet.getCell(`A${sourceTitleRowIndex}`).alignment = {
+    // horizontal: "left",
+    horizontal: "center",
+    vertical: "middle", // optional, looks better in merged cells
+  };
+
+  worksheet.addRow(["Name", "Amount", "Due", "Shipment"]);
+  worksheet.getRow(worksheet.lastRow.number).font = { bold: true };
+
+  // Outlet Row
+  worksheet.addRow([
+    "Outlet",
+    isValidNumber(
+      dailyCombineSales?.data?.sub_total?.both_total_info?.outlet_net,
+    )
+      ? dailyCombineSales.data.sub_total.both_total_info.outlet_net
+      : "",
+
+    isValidNumber(
+      dailyCombineSales?.data?.sub_total?.both_total_info?.outlet_due,
+    )
+      ? parseFloat(-dailyCombineSales.data.sub_total.both_total_info.outlet_due)
+      : "",
+    isValidNumber(
+      dailyCombineSales?.data?.sub_total?.both_total_info?.outlet_shipping,
+    )
+      ? dailyCombineSales.data.sub_total.both_total_info.outlet_shipping
+      : "",
+  ]);
+
+  // E-commerce Row
+  worksheet.addRow([
+    "E-Commerce",
+    isValidNumber(dailyCombineSales?.data?.sub_total?.both_total_info?.ecom_net)
+      ? dailyCombineSales.data.sub_total.both_total_info.ecom_net
+      : "",
+    isValidNumber(dailyCombineSales?.data?.sub_total?.both_total_info?.ecom_due)
+      ? -dailyCombineSales.data.sub_total.both_total_info.ecom_due
+      : "",
+    isValidNumber(
+      dailyCombineSales?.data?.sub_total?.both_total_info?.ecom_shipping,
+    )
+      ? dailyCombineSales.data.sub_total.both_total_info.ecom_shipping
+      : "",
+  ]);
+
+  // Net Amount Row
+  worksheet.addRow([
+    "Net Amount",
+    isValidNumber(dailyCombineSales?.data?.sub_total?.both_total_info?.ecom_net)
+      ? dailyCombineSales.data.sub_total.both_total_info.ecom_net
+      : "",
+    isValidNumber(dailyCombineSales?.data?.sub_total?.both_total_info?.ecom_due)
+      ? -dailyCombineSales.data.sub_total.both_total_info.ecom_due
+      : "",
+    isValidNumber(
+      dailyCombineSales?.data?.sub_total?.both_total_info?.ecom_shipping,
+    )
+      ? dailyCombineSales.data.sub_total.both_total_info.ecom_shipping
+      : "",
+  ]);
+
+  worksheet.getRow(worksheet.lastRow.number).font = { bold: true };
 
   // ===============================
   // Download
