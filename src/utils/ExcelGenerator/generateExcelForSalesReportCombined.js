@@ -417,13 +417,12 @@ export const exportSalesReport = async (data) => {
   });
 
   //2ed Table
-  let sourceTitleRowIndex = worksheet.lastRow.number + 3;
+  let lastIndex = worksheet.lastRow.number + 3;
 
-  worksheet.mergeCells(`A${sourceTitleRowIndex}:D${sourceTitleRowIndex}`);
-  worksheet.getCell(`A${sourceTitleRowIndex}`).value =
-    "Source Wise Sales Report";
-  worksheet.getCell(`A${sourceTitleRowIndex}`).font = { bold: true };
-  worksheet.getCell(`A${sourceTitleRowIndex}`).alignment = {
+  worksheet.mergeCells(`A${lastIndex}:D${lastIndex}`);
+  worksheet.getCell(`A${lastIndex}`).value = "Source Wise Sales Report";
+  worksheet.getCell(`A${lastIndex}`).font = { bold: true };
+  worksheet.getCell(`A${lastIndex}`).alignment = {
     // horizontal: "left",
     horizontal: "center",
     vertical: "middle", // optional, looks better in merged cells
@@ -489,9 +488,9 @@ export const exportSalesReport = async (data) => {
 
   //3ed Table
 
-  sourceTitleRowIndex = worksheet.lastRow.number + 3;
-  worksheet.getCell(`A${sourceTitleRowIndex}`).value = "Cash Amount";
-  worksheet.getCell(`B${sourceTitleRowIndex}`).value = isValidNumber(
+  lastIndex = worksheet.lastRow.number + 3;
+  worksheet.getCell(`A${lastIndex}`).value = "Cash Amount";
+  worksheet.getCell(`B${lastIndex}`).value = isValidNumber(
     dailyCombineSales?.data?.sub_total?.total_cash,
   )
     ? dailyCombineSales.data.sub_total.total_cash
