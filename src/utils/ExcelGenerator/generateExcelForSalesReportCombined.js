@@ -177,6 +177,24 @@ const dailyCombineSales = {
   request: {},
 };
 
+// ===============================
+// Border Helper
+// ===============================
+const addBorderToRange = (worksheet, startRow, endRow, startCol, endCol) => {
+  for (let i = startRow; i <= endRow; i++) {
+    for (let j = startCol; j <= endCol; j++) {
+      const cell = worksheet.getRow(i).getCell(j);
+
+      cell.border = {
+        top: { style: "thin" },
+        left: { style: "thin" },
+        bottom: { style: "thin" },
+        right: { style: "thin" },
+      };
+    }
+  }
+};
+
 export const exportSalesReport = async (data) => {
   const workbook = new ExcelJS.Workbook();
   const worksheet = workbook.addWorksheet("Sales Report");
@@ -236,6 +254,7 @@ export const exportSalesReport = async (data) => {
   ];
 
   worksheet.addRow(headerRow1);
+  const mainTableStartRow = worksheet.lastRow.number;
 
   // Style header
   worksheet.getRow(5).font = { bold: true };
@@ -526,11 +545,25 @@ export const exportSalesReport = async (data) => {
     //   col.width = 16;
     // }
 
-    col.width = 16;
+    if (worksheet.columns.length - 1 === index) {
+      col.width = 19;
+    } else {
+      col.width = 16;
+    }
   });
+
+  // ✅ Apply border to Main Table
+  addBorderToRange(
+    worksheet,
+    mainTableStartRow,
+    lastIndex,
+    1,
+    headerRow1.length,
+  );
 
   //2ed Table
   lastIndex = worksheet.lastRow.number + 3;
+  let sourceStart = lastIndex;
 
   worksheet.mergeCells(`A${lastIndex}:D${lastIndex}`);
   worksheet.getCell(`A${lastIndex}`).value = "Source Wise Sales Report";
@@ -598,10 +631,12 @@ export const exportSalesReport = async (data) => {
   ]);
 
   worksheet.getRow(worksheet.lastRow.number).font = { bold: true };
+  addBorderToRange(worksheet, sourceStart, worksheet.lastRow.number, 1, 4); // where, 4 = number of column
 
   //3ed Table
 
   lastIndex = worksheet.lastRow.number + 3;
+  let paymentStart = lastIndex;
   worksheet.getCell(`A${lastIndex}`).value = "Cash Amount";
   worksheet.getCell(`B${lastIndex}`).value = isValidNumber(
     dailyCombineSales?.data?.sub_total?.total_cash,
@@ -703,6 +738,9 @@ export const exportSalesReport = async (data) => {
       : "",
   ]);
   worksheet.getRow(worksheet.lastRow.number).font = { bold: true };
+
+  // ✅ Apply border
+  addBorderToRange(worksheet, paymentStart, worksheet.lastRow.number, 1, 2); // where, 2 = number of payment column
 
   // ===============================
   // Download
